@@ -5,13 +5,13 @@ import requests
 import random
 from discord.ext import commands
 
-class GetPokemon():
+class Casino():
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(pass_context=True)
-    async def getpokemon(self, ctx):
-        """gets pokemon based on random num -- to be improved later"""
+    async def casino(self, ctx):
+        """pykemon casino"""
 
 def setup(bot):
-    bot.add_cog(GetPokemon(bot))  
+    bot.add_cog(Casino(bot))  
