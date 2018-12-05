@@ -1,12 +1,3 @@
-#eventually operate so it keeps a log and when you generate a pokemon
-#you can assign to a bitcoin or ethereum address by entering address
-#server keeps log of that address
-#$pokemon update "address" makes it so it looks at all the utxo in that address, sees if there was a transaction 
-#that said "move "num" (in message field) "address" (sent to)
-#where num is the pokemon number and address is where to, it transfers ownership
-#eventually move
-
-
 
 import json
 import requests
