@@ -11,7 +11,7 @@ There are a number of utility commands being showcased here.'''
 TOKEN = "NTE2OTEwNTE3ODczMjc4OTc2.Dt9ySw.LhJlNITlvyE5_ykG4GBgFCP_ud8"
 
 # this specifies what extensions to load when the bot starts up
-startup_extensions = ["getpokemon"]
+startup_extensions = ["getpokemon", "go"]
 
 bot = commands.Bot(command_prefix='$', description=description)
 
