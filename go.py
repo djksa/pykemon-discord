@@ -23,18 +23,30 @@ class Go():
         for i in range(len(locations_list)): 
             locations_str += (locations_list[i]["name"] + " | ")
         self.locations_str = locations_str
+    
+    def locations_array_formatted(self, locations_array):
+        #returns str
+        locations_array_str = ""
+        for location in locations_array:
+            locations_array_str += location + " | "
+        return locations_array_str
 
     @commands.command(pass_context=True)
     async def locations(self):
         locations_str = self.locations_str
-        locations_str_tenth = int(len(locations_str) / 10) #NEED TO FIX LOCATION NAMES BEING CUT ON LAST FEW CHARS OF MESSAGE
+        locations_array = locations_str.split(" | ")
+        locations_array.pop()
+        #removes last item in array: an empty str
+        locations_str_tenth = int(len(locations_array) / 10) #NEED TO FIX LOCATION NAMES BEING CUT ON LAST FEW CHARS OF MESSAGE
         current_index = 0
         for i in range(10):
             if i != 9:
-                await self.bot.say("```\nLOCATIONS PAGE : " + str(i + 1) + "\n" + locations_str[current_index : current_index + locations_str_tenth] + "\n```")
+                await self.bot.say("```\nLOCATIONS PAGE : " + str(i + 1) + "\n" + \
+                self.locations_array_formatted(locations_array[current_index : current_index + locations_str_tenth]) + "\n```")
                 current_index += locations_str_tenth
             else:
-                await self.bot.say("```\nLOCATIONS PAGE : " + str(i + 1) + "\n" + locations_str[current_index :] + "\n```")
+                await self.bot.say("```\nLOCATIONS PAGE : " + str(i + 1) + "\n" + \
+                self.locations_array_formatted(locations_array[current_index :]) + "\n```")
 
     def random_encounter(self, poke_encounters):
         #returns int
@@ -53,7 +65,7 @@ class Go():
         """takes you to a location"""
         locations_str = self.locations_str
         if location not in locations_str.split(" | "):
-             await self.bot.say("```\nNot a real location. Send $locations to get a comprehensive list of locations\n```")
+             await self.bot.say("```\nNot a real location. Send $locations to get a comprehensive list of locations.\n```")
 
         else:
             r = requests.get("https://pokeapi.co/api/v2/location-area/" + location + "/")
@@ -65,5 +77,8 @@ class Go():
 
 def setup(bot):
     bot.add_cog(Go(bot))  
+
+
+
 
 
