@@ -13,16 +13,16 @@ class Go():
     def __init__(self, bot):
         self.bot = bot
         self.setup_locations()
-        #sets self.locations_str
+        #sets self.locations_array
         
     def setup_locations(self):
-        #returns str of locations sep by '|'
+        #returns array of locations
         r = requests.get("https://pokeapi.co/api/v2/location-area/")
         locations_list = r.json()["results"]
-        locations_str = ""
+        locations_array = []
         for i in range(len(locations_list)): 
-            locations_str += (locations_list[i]["name"] + " | ")
-        self.locations_str = locations_str
+            locations_array.append(locations_list[i]["name"])
+        self.locations_array = locations_array
     
     def locations_array_formatted(self, locations_array):
         #returns str
@@ -33,17 +33,16 @@ class Go():
 
     @commands.command(pass_context=True)
     async def locations(self):
-        locations_str = self.locations_str
-        locations_array = locations_str.split(" | ")
+        locations_array = self.locations_array
         locations_array.pop()
         #removes last item in array: an empty str
-        locations_str_tenth = int(len(locations_array) / 10) #NEED TO FIX LOCATION NAMES BEING CUT ON LAST FEW CHARS OF MESSAGE
+        locations_array_tenth = int(len(locations_array) / 10) #NEED TO FIX LOCATION NAMES BEING CUT ON LAST FEW CHARS OF MESSAGE
         current_index = 0
         for i in range(10):
             if i != 9:
                 await self.bot.say("```\nLOCATIONS PAGE : " + str(i + 1) + "\n" + \
-                self.locations_array_formatted(locations_array[current_index : current_index + locations_str_tenth]) + "\n```")
-                current_index += locations_str_tenth
+                self.locations_array_formatted(locations_array[current_index : current_index + locations_array_tenth]) + "\n```")
+                current_index += locations_array_tenth
             else:
                 await self.bot.say("```\nLOCATIONS PAGE : " + str(i + 1) + "\n" + \
                 self.locations_array_formatted(locations_array[current_index :]) + "\n```")
@@ -63,8 +62,8 @@ class Go():
     @commands.command(pass_context=True)
     async def go(self, ctx, location: str): # add exception catches for potential wrong inputs
         """takes you to a location"""
-        locations_str = self.locations_str
-        if location not in locations_str.split(" | "):
+        locations_array = self.locations_array
+        if location not in locations_array:
              await self.bot.say("```\nNot a real location. Send $locations to get a comprehensive list of locations.\n```")
 
         else:
