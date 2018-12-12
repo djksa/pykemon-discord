@@ -1,3 +1,4 @@
+import math
 import re
 import sys
 import json
@@ -30,6 +31,7 @@ class Go():
         for location in locations_array:
             locations_array_str += location + " | "
         return locations_array_str
+    
 
     @commands.command(pass_context=True)
     async def locations(self):
@@ -58,6 +60,11 @@ class Go():
         poke_name = r.json()["pokemon_encounters"][random_encounter]["pokemon"]["name"]
         return poke_name
 
+    def pokemon_value(self, chance):
+        #returns str
+        value = math.pow(2,(-1 * chance)) * 1000000000
+        return str(int(value))
+
 
     @commands.command(pass_context=True)
     async def go(self, ctx, location: str): # add exception catches for potential wrong inputs
@@ -69,10 +76,14 @@ class Go():
         else:
             r = requests.get("https://pokeapi.co/api/v2/location-area/" + location + "/")
             poke_encounters = r.json()["pokemon_encounters"]
-            poke_name = self.grab_pokemon(self.random_encounter(poke_encounters), location)
+            random_encounter = self.random_encounter(poke_encounters)
+            poke_chance = poke_encounters[random_encounter]["version_details"][0]["encounter_details"][0]["chance"]
+            poke_name = self.grab_pokemon(random_encounter, location)
+            poke_value = self.pokemon_value(poke_chance)
             poke_img = "http://play.pokemonshowdown.com/sprites/xyani/" + poke_name + ".gif"
+            await self.bot.say("` value: $" + poke_value + "`\n" + poke_img)
             await self.bot.send_message(ctx.message.channel, poke_name, tts=True)
-            await self.bot.say(poke_img)
+
 
 def setup(bot):
     bot.add_cog(Go(bot))  
